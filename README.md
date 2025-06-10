@@ -105,7 +105,7 @@ Il expose toutes les ressources nécessaires au jeu (armes, vaisseaux, ennemis, 
 ---
 
 
-## 📚 Documentation & outils utiles
+##  Documentation & outils utiles
 
 - [Documentation Symfony](https://symfony.com/doc/current/index.html)
 - [Documentation NelmioCorsBundle (CORS)](https://symfony.com/doc/current/bundles/NelmioCorsBundle/index.html)
@@ -113,7 +113,7 @@ Il expose toutes les ressources nécessaires au jeu (armes, vaisseaux, ennemis, 
 
 ---
 
-## 🔥 CRUD complet sur toutes les entités du jeu
+##  CRUD complet sur toutes les entités du jeu
 
 Chaque ressource du jeu dispose désormais d’un CRUD complet (API REST) :
 
