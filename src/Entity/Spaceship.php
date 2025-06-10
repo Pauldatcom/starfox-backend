@@ -28,6 +28,9 @@ class Spaceship
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -41,7 +44,6 @@ class Spaceship
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -53,7 +55,6 @@ class Spaceship
     public function setBaseHp(int $baseHp): static
     {
         $this->baseHp = $baseHp;
-
         return $this;
     }
 
@@ -65,7 +66,6 @@ class Spaceship
     public function setBaseSpeed(float $baseSpeed): static
     {
         $this->baseSpeed = $baseSpeed;
-
         return $this;
     }
 
@@ -77,7 +77,6 @@ class Spaceship
     public function setMaxBombs(int $maxBombs): static
     {
         $this->maxBombs = $maxBombs;
-
         return $this;
     }
 
@@ -89,7 +88,17 @@ class Spaceship
     public function setCreatedAt(?\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
 
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 }
