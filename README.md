@@ -104,6 +104,25 @@ Il expose toutes les ressources nécessaires au jeu (armes, vaisseaux, ennemis, 
 
 ---
 
+
+## 📚 Documentation & outils utiles
+
+- [Documentation Symfony](https://symfony.com/doc/current/index.html)
+- [Documentation NelmioCorsBundle (CORS)](https://symfony.com/doc/current/bundles/NelmioCorsBundle/index.html)
+- [Tester l’API avec Postman](https://learning.postman.com/docs/getting-started/introduction/)
+
+---
+
+## 🔥 CRUD complet sur toutes les entités du jeu
+
+Chaque ressource du jeu dispose désormais d’un CRUD complet (API REST) :
+
+- **GET** (liste et détail), **POST** (création), **PUT** (modification), **DELETE** (suppression)
+- Entités concernées : **Weapons, Spaceships, Levels, EnemyTypes, ObstacleTypes, ItemDefinitions**
+
+---
+
+
 ##  Conseils à mes camarades
 
 - **Pour voir la structure** : ouvrez les entités dans `/src/Entity`
