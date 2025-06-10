@@ -28,3 +28,5 @@ node_modules/
 
 .env.dev
 .env.test
+.env.dev.local
+.env.test.local
