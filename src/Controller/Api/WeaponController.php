@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class WeaponController extends AbstractController
 {
@@ -53,7 +54,7 @@ class WeaponController extends AbstractController
 
     // Créer une arme
     #[Route('/api/weapons', name: 'api_create_weapon', methods: ['POST'])]
-    public function createWeapon(Request $request, EntityManagerInterface $em): JsonResponse
+    public function createWeapon(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $weapon = new Weapon();
@@ -61,8 +62,18 @@ class WeaponController extends AbstractController
         $weapon->setDamage($data['damage'] ?? 0);
         $weapon->setCooldown($data['cooldown'] ?? 0);
         $weapon->setType($data['type'] ?? '');
-        $weapon->setLevelRequired($data['levelRequired'] ?? 1);
+        $weapon->setLevelRequired($data['levelRequired'] ?? 0);
         $weapon->setCreatedAt(new \DateTimeImmutable());
+
+        // VALIDATION ici
+        $errors = $validator->validate($weapon);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
 
         $em->persist($weapon);
         $em->flush();
@@ -72,7 +83,7 @@ class WeaponController extends AbstractController
 
     // Modifier une arme
     #[Route('/api/weapons/{id}', name: 'api_update_weapon', methods: ['PUT'])]
-    public function updateWeapon($id, Request $request, EntityManagerInterface $em): JsonResponse
+    public function updateWeapon($id, Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
         $weapon = $em->getRepository(Weapon::class)->find($id);
         if (!$weapon) {
@@ -85,6 +96,16 @@ class WeaponController extends AbstractController
         if (isset($data['cooldown'])) $weapon->setCooldown($data['cooldown']);
         if (isset($data['type'])) $weapon->setType($data['type']);
         if (isset($data['levelRequired'])) $weapon->setLevelRequired($data['levelRequired']);
+
+        // VALIDATION ici
+        $errors = $validator->validate($weapon);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
 
         $em->flush();
         return $this->json(['message' => 'Weapon updated']);

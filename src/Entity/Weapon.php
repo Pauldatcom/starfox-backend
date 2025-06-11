@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\WeaponRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WeaponRepository::class)]
 class Weapon
@@ -14,18 +15,23 @@ class Weapon
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Assert\Positive(message: "Les dégâts doivent être positifs.")]
     private ?int $damage = null;
 
     #[ORM\Column]
+    #[Assert\PositiveOrZero(message: "Le cooldown ne peut pas être négatif.")]
     private ?float $cooldown = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank(message: "Le type est obligatoire.")]
     private ?string $type = null;
 
     #[ORM\Column]
+    #[Assert\PositiveOrZero(message: "Le niveau requis doit être positif ou nul.")]
     private ?int $levelRequired = null;
 
     #[ORM\Column]

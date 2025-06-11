@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ObstacleTypeRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ObstacleTypeRepository::class)]
 class ObstacleType
@@ -15,16 +15,21 @@ class ObstacleType
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le nom du type d'obstacle est obligatoire.")]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "La forme est obligatoire.")]
     private ?string $shape = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $dimensions = null;
+    #[ORM\Column(type: 'json')]
+    #[Assert\NotNull(message: "Les dimensions sont obligatoires.")]
+    private ?array $dimensions = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: "created_at")]
     private ?\DateTimeImmutable $createdAt = null;
+
+    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -39,7 +44,6 @@ class ObstacleType
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -51,19 +55,17 @@ class ObstacleType
     public function setShape(string $shape): static
     {
         $this->shape = $shape;
-
         return $this;
     }
 
-    public function getDimensions(): ?string
+    public function getDimensions(): ?array
     {
         return $this->dimensions;
     }
 
-    public function setDimensions(string $dimensions): static
+    public function setDimensions(array $dimensions): static
     {
         $this->dimensions = $dimensions;
-
         return $this;
     }
 
@@ -75,7 +77,6 @@ class ObstacleType
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 }

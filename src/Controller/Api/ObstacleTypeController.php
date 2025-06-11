@@ -6,114 +6,111 @@ use App\Entity\ObstacleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ObstacleTypeController extends AbstractController
 {
-    #[Route('/api/obstacles', name: 'api_list_obstacles', methods: ['GET'])]
-    public function listObstacles(EntityManagerInterface $em): JsonResponse
+    #[Route('/api/obstacle-types', name: 'api_list_obstacle_types', methods: ['GET'])]
+    public function listObstacleTypes(EntityManagerInterface $em): JsonResponse
     {
-        $obstacles = $em->getRepository(ObstacleType::class)->findAll();
-
+        $obstacleTypes = $em->getRepository(ObstacleType::class)->findAll();
         $data = [];
-        foreach ($obstacles as $obs) {
+        foreach ($obstacleTypes as $obstacleType) {
             $data[] = [
-                'id' => $obs->getId(),
-                'name' => $obs->getName(),
-                'shape' => $obs->getShape(),
-                'dimensions' => $obs->getDimensions(),
-                'createdAt' => $obs->getCreatedAt()->format('Y-m-d H:i:s'),
+            'id' => $obstacleType->getId(),
+            'name' => $obstacleType->getName(),
+            'shape' => $obstacleType->getShape(),
+            'dimensions' => $obstacleType->getDimensions(),
+            'createdAt' => $obstacleType->getCreatedAt()?->format('Y-m-d H:i:s'),
             ];
         }
         return $this->json($data);
     }
 
+    #[Route('/api/obstacles/{id}', name: 'api_show_obstacle_type', methods: ['GET'])]
+    public function showObstacleType($id, EntityManagerInterface $em): JsonResponse
+    {
+        $obstacleType = $em->getRepository(ObstacleType::class)->find($id);
+        if (!$obstacleType) {
+            return $this->json(['error' => 'ObstacleType not found'], 404);
+        }
+        $data = [
+                'id' => $obstacleType->getId(),
+                'name' => $obstacleType->getName(),
+                'shape' => $obstacleType->getShape(),
+                'dimensions' => $obstacleType->getDimensions(),
+                'createdAt' => $obstacleType->getCreatedAt()?->format('Y-m-d H:i:s'),
+        ];
+        return $this->json($data);
+    }
 
+    #[Route('/api/obstacle-types', name: 'api_create_obstacle_type', methods: ['POST'])]
+    public function createObstacleType(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $obstacleType = new ObstacleType();
+        $obstacleType->setName($data['name'] ?? '');
+        $obstacleType->setDescription($data['description'] ?? '');
+        $obstacleType->setColor($data['color'] ?? '');
+        $obstacleType->setSize($data['size'] ?? 0);
+        $obstacleType->setCollision($data['collision'] ?? false);
 
-    // Find an obstacle by its ID
-
-                #[Route('/api/obstacles/{id}', name: 'api_show_obstacle', methods: ['GET'])]
-            public function showObstacle($id, EntityManagerInterface $em): JsonResponse
-            {
-                $obs = $em->getRepository(ObstacleType::class)->find($id);
-                if (!$obs) {
-                    return $this->json(['error' => 'ObstacleType not found'], 404);
-                }
-                $data = [
-                    'id' => $obs->getId(),
-                    'name' => $obs->getName(),
-                    'shape' => $obs->getShape(),
-                    'dimensions' => $obs->getDimensions(),
-                    'createdAt' => $obs->getCreatedAt()?->format('Y-m-d H:i:s'),
-                ];
-                return $this->json($data);
+        // VALIDATION ici
+        $errors = $validator->validate($obstacleType);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
             }
-
-
-    // Create an obstacle
-
-
-
-                
-
-            #[Route('/api/obstacles', name: 'api_create_obstacle', methods: ['POST'])]
-            public function createObstacle(Request $request, EntityManagerInterface $em): JsonResponse
-            {
-                $data = json_decode($request->getContent(), true);
-
-                $obs = new ObstacleType();
-                $obs->setName($data['name'] ?? '');
-                $obs->setShape($data['shape'] ?? '');
-                $obs->setDimensions($data['dimensions'] ?? '');
-                $obs->setCreatedAt(new \DateTimeImmutable());
-
-                $em->persist($obs);
-                $em->flush();
-
-                return $this->json(['message' => 'ObstacleType created', 'id' => $obs->getId()], 201);
-            }
-
-
-
-
-    // modify an obstacle
-
-                #[Route('/api/obstacles/{id}', name: 'api_update_obstacle', methods: ['PUT'])]
-        public function updateObstacle($id, Request $request, EntityManagerInterface $em): JsonResponse
-        {
-            $obs = $em->getRepository(ObstacleType::class)->find($id);
-            if (!$obs) {
-                return $this->json(['error' => 'ObstacleType not found'], 404);
-            }
-            $data = json_decode($request->getContent(), true);
-
-            if (isset($data['name'])) $obs->setName($data['name']);
-            if (isset($data['shape'])) $obs->setShape($data['shape']);
-            if (isset($data['dimensions'])) $obs->setDimensions($data['dimensions']);
-
-            $em->flush();
-            return $this->json(['message' => 'ObstacleType updated']);
+            return $this->json(['errors' => $errorMessages], 400);
         }
 
+        $em->persist($obstacleType);
+        $em->flush();
 
+        return $this->json(['message' => 'ObstacleType created', 'id' => $obstacleType->getId()], 201);
+    }
 
-    // Delete an obstacle
+    #[Route('/api/obstacle-types/{id}', name: 'api_update_obstacle_type', methods: ['PUT'])]
+    public function updateObstacleType($id, Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
+    {
+        $obstacleType = $em->getRepository(ObstacleType::class)->find($id);
+        if (!$obstacleType) {
+            return $this->json(['error' => 'ObstacleType not found'], 404);
+        }
+        $data = json_decode($request->getContent(), true);
 
+        if (isset($data['name'])) $obstacleType->setName($data['name']);
+        if (isset($data['description'])) $obstacleType->setDescription($data['description']);
+        if (isset($data['color'])) $obstacleType->setColor($data['color']);
+        if (isset($data['size'])) $obstacleType->setSize($data['size']);
+        if (isset($data['collision'])) $obstacleType->setCollision($data['collision']);
 
-
-
-            #[Route('/api/obstacles/{id}', name: 'api_delete_obstacle', methods: ['DELETE'])]
-            public function deleteObstacle($id, EntityManagerInterface $em): JsonResponse
-            {
-                $obs = $em->getRepository(ObstacleType::class)->find($id);
-                if (!$obs) {
-                    return $this->json(['error' => 'ObstacleType not found'], 404);
-                }
-                $em->remove($obs);
-                $em->flush();
-                return $this->json(['message' => 'ObstacleType deleted']);
+        // VALIDATION ici
+        $errors = $validator->validate($obstacleType);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
             }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
 
+        $em->flush();
+        return $this->json(['message' => 'ObstacleType updated']);
+    }
 
+    #[Route('/api/obstacle-types/{id}', name: 'api_delete_obstacle_type', methods: ['DELETE'])]
+    public function deleteObstacleType($id, EntityManagerInterface $em): JsonResponse
+    {
+        $obstacleType = $em->getRepository(ObstacleType::class)->find($id);
+        if (!$obstacleType) {
+            return $this->json(['error' => 'ObstacleType not found'], 404);
+        }
+        $em->remove($obstacleType);
+        $em->flush();
+        return $this->json(['message' => 'ObstacleType deleted']);
+    }
 }

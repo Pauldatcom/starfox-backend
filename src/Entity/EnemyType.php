@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EnemyTypeRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EnemyTypeRepository::class)]
 class EnemyType
@@ -15,21 +15,27 @@ class EnemyType
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le nom de l'ennemi est obligatoire.")]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Assert\Positive(message: "Les points de vie doivent être positifs.")]
     private ?int $hp = null;
 
     #[ORM\Column]
+    #[Assert\Positive(message: "La vitesse doit être positive.")]
     private ?float $speed = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le pattern est obligatoire.")]
     private ?string $pattern = null;
 
     #[ORM\Column]
+    #[Assert\PositiveOrZero(message: "L'intervalle de tir doit être positif ou nul.")]
     private ?float $fireInterval = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le chemin du modèle est obligatoire.")]
     private ?string $modelPath = null;
 
     #[ORM\Column]
@@ -48,7 +54,6 @@ class EnemyType
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -60,7 +65,6 @@ class EnemyType
     public function setHp(int $hp): static
     {
         $this->hp = $hp;
-
         return $this;
     }
 
@@ -72,7 +76,6 @@ class EnemyType
     public function setSpeed(float $speed): static
     {
         $this->speed = $speed;
-
         return $this;
     }
 
@@ -84,7 +87,6 @@ class EnemyType
     public function setPattern(string $pattern): static
     {
         $this->pattern = $pattern;
-
         return $this;
     }
 
@@ -96,7 +98,6 @@ class EnemyType
     public function setFireInterval(float $fireInterval): static
     {
         $this->fireInterval = $fireInterval;
-
         return $this;
     }
 
@@ -108,7 +109,6 @@ class EnemyType
     public function setModelPath(string $modelPath): static
     {
         $this->modelPath = $modelPath;
-
         return $this;
     }
 
@@ -120,7 +120,6 @@ class EnemyType
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 }

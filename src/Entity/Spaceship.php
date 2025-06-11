@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SpaceshipRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SpaceshipRepository::class)]
 class Spaceship
@@ -14,22 +15,28 @@ class Spaceship
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le nom du vaisseau est obligatoire.")]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?int $baseHp = null;
+    #[ORM\Column(name: "base_hp")]
+    #[Assert\Positive(message: "Les points de vie doivent être positifs.")]
+    private ?int $health = null;
 
-    #[ORM\Column]
-    private ?float $baseSpeed = null;
+    #[ORM\Column(name: "base_speed")]
+    #[Assert\Positive(message: "La vitesse doit être positive.")]
+    private ?float $speed = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: "max_bombs")]
+    #[Assert\PositiveOrZero(message: "Le nombre de bombes doit être positif ou nul.")]
     private ?int $maxBombs = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(name: "created_at", nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(name: "updated_at", nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -47,25 +54,25 @@ class Spaceship
         return $this;
     }
 
-    public function getBaseHp(): ?int
+    public function getHealth(): ?int
     {
-        return $this->baseHp;
+        return $this->health;
     }
 
-    public function setBaseHp(int $baseHp): static
+    public function setHealth(int $health): static
     {
-        $this->baseHp = $baseHp;
+        $this->health = $health;
         return $this;
     }
 
-    public function getBaseSpeed(): ?float
+    public function getSpeed(): ?float
     {
-        return $this->baseSpeed;
+        return $this->speed;
     }
 
-    public function setBaseSpeed(float $baseSpeed): static
+    public function setSpeed(float $speed): static
     {
-        $this->baseSpeed = $baseSpeed;
+        $this->speed = $speed;
         return $this;
     }
 
