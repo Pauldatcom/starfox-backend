@@ -100,8 +100,8 @@ class GameFixtures extends Fixture
         // ----- Spaceships -----
         $fox = (new Spaceship())
             ->setName('Starfox')
-            ->setBaseHp(100)
-            ->setBaseSpeed(7.5)
+            ->setHealth(100)
+            ->setSpeed(7.5)
             ->setMaxBombs(3)
             ->setCreatedAt(new \DateTimeImmutable())
             ->setUpdatedAt(new \DateTimeImmutable());
