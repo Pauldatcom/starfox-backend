@@ -132,14 +132,22 @@ class GameFixtures extends Fixture
         $arch = (new ObstacleType())
             ->setName('Arche')
             ->setShape('mesh')
-            ->setDimensions('{"width":6,"height":8,"depth":2}')
+            ->setDimensions([
+                'width' => 6,
+                'height' => 8,
+                'depth' => 2
+            ])
             ->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($arch);
 
         $building = (new ObstacleType())
             ->setName('Bâtiment')
             ->setShape('box')
-            ->setDimensions('{"width":4,"height":10,"depth":4}')
+            ->setDimensions([
+                    'width' => 4,
+                    'height' => 10,
+                    'depth' => 4
+                ])
             ->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($building);
 
