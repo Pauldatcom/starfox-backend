@@ -29,6 +29,23 @@ class ObstacleType
     #[ORM\Column(name: "created_at")]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'boolean')]
+#[Assert\NotNull(message: "Le champ collision est obligatoire.")]
+private ?bool $collision = null;
+
+#[ORM\Column(type: 'text')]
+#[Assert\NotBlank(message: "La description est obligatoire.")]
+private ?string $description = null;
+
+#[ORM\Column(length: 20)]
+#[Assert\NotBlank(message: "La couleur est obligatoire.")]
+private ?string $color = null;
+
+#[ORM\Column(type: 'float')]
+#[Assert\Positive(message: "La taille doit être un nombre positif.")]
+private ?float $size = null;
+
+
     // Getters et Setters
 
     public function getId(): ?int
@@ -79,4 +96,50 @@ class ObstacleType
         $this->createdAt = $createdAt;
         return $this;
     }
+
+    public function isCollision(): ?bool
+{
+    return $this->collision;
+}
+
+public function setCollision(bool $collision): static
+{
+    $this->collision = $collision;
+    return $this;
+}
+
+public function getDescription(): ?string
+{
+    return $this->description;
+}
+
+public function setDescription(string $description): static
+{
+    $this->description = $description;
+    return $this;
+}
+
+public function getColor(): ?string
+{
+    return $this->color;
+}
+
+public function setColor(string $color): static
+{
+    $this->color = $color;
+    return $this;
+}
+
+public function getSize(): ?float
+{
+    return $this->size;
+}
+
+public function setSize(float $size): static
+{
+    $this->size = $size;
+    return $this;
+}
+
+
 }

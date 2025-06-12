@@ -10,10 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Route('/api', name: 'api_')]
 class WeaponController extends AbstractController
 {
     // Lister toutes les armes
-    #[Route('/api/weapons', name: 'api_list_weapons', methods: ['GET'])]
+    #[Route('/weapons', name: 'list_weapons', methods: ['GET'])]
     public function listWeapons(EntityManagerInterface $em): JsonResponse
     {
         $weapons = $em->getRepository(Weapon::class)->findAll();
@@ -33,7 +34,7 @@ class WeaponController extends AbstractController
     }
 
     // Voir une arme par son id
-    #[Route('/api/weapons/{id}', name: 'api_show_weapon', methods: ['GET'])]
+    #[Route('/weapons/{id}', name: 'show_weapon', methods: ['GET'])]
     public function showWeapon($id, EntityManagerInterface $em): JsonResponse
     {
         $weapon = $em->getRepository(Weapon::class)->find($id);
@@ -53,7 +54,7 @@ class WeaponController extends AbstractController
     }
 
     // Créer une arme
-    #[Route('/api/weapons', name: 'api_create_weapon', methods: ['POST'])]
+    #[Route('/weapons', name: 'create_weapon', methods: ['POST'])]
     public function createWeapon(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -82,7 +83,7 @@ class WeaponController extends AbstractController
     }
 
     // Modifier une arme
-    #[Route('/api/weapons/{id}', name: 'api_update_weapon', methods: ['PUT'])]
+    #[Route('/weapons/{id}', name: 'update_weapon', methods: ['PUT'])]
     public function updateWeapon($id, Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
         $weapon = $em->getRepository(Weapon::class)->find($id);
@@ -112,7 +113,7 @@ class WeaponController extends AbstractController
     }
 
     // Supprimer une arme
-    #[Route('/api/weapons/{id}', name: 'api_delete_weapon', methods: ['DELETE'])]
+    #[Route('/weapons/{id}', name: 'delete_weapon', methods: ['DELETE'])]
     public function deleteWeapon($id, EntityManagerInterface $em): JsonResponse
     {
         $weapon = $em->getRepository(Weapon::class)->find($id);

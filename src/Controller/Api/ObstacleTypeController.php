@@ -29,7 +29,7 @@ class ObstacleTypeController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/api/obstacles/{id}', name: 'api_show_obstacle_type', methods: ['GET'])]
+    #[Route('/api/obstacle-types/{id}', name: 'api_show_obstacle_type', methods: ['GET'])]
     public function showObstacleType($id, EntityManagerInterface $em): JsonResponse
     {
         $obstacleType = $em->getRepository(ObstacleType::class)->find($id);
